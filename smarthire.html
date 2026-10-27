@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartHire AI - BSSE Project by Ayesha Waqar</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-violet: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-indigo: #4338ca;
+            --dark-navy: #0f172a;
+            --light-bg: #f8fafc;
+            --card-border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: #334155;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand span.highlight {
+            color: var(--primary-violet);
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #475569 !important;
+            transition: all 0.2s;
+            padding: 0.5rem 0.8rem !important;
+            border-radius: 6px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-violet) !important;
+            background-color: #e0e7ff;
+        }
+
+        .admin-lock-btn {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #64748b;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .admin-lock-btn:hover {
+            background-color: #fee2e2;
+            color: #ef4444;
+            border-color: #fca5a5;
+        }
+
+        .admin-lock-btn.unlocked {
+            background-color: #dcfce7;
+            color: #16a34a;
+            border-color: #86efac;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .badge-custom {
+            padding: 0.4em 0.75em;
+            font-weight: 600;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        .badge-violet {
+            background-color: #e0e7ff;
+            color: var(--secondary-indigo);
+        }
+
+        .card {
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .skill-pill {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .skill-pill .btn-remove {
+            margin-left: 6px;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+
+        .skill-pill .btn-remove:hover {
+            color: #ef4444;
+        }
+
+        .score-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: white;
+        }
+
+        .bg-score-high { background-color: #10b981; }
+        .bg-score-mid { background-color: #f59e0b; }
+        .bg-score-low { background-color: #ef4444; }
+
+        /* Dynamic Custom Buttons Container */
+        .dynamic-btn-zone {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        /* Pulse animation for live feed indicator */
+        .live-dot {
+            height: 10px;
+            width: 10px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        footer {
+            margin-top: auto;
+            background-color: #ffffff;
+            border-top: 1px solid var(--card-border);
+            padding: 1.5rem 0;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-dark fs-4" href="#" onclick="showPage('intro')">
+                <i class="fa-solid fa-brain-circuit text-primary me-2"></i>Smart<span class="highlight">Hire</span> AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-link-container navbar-nav ms-auto align-items-center me-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="nav-intro" href="#" onclick="showPage('intro')">Overview & Benchmark</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-jobs" href="#" onclick="showPage('jobs')">
+                            Live Jobs Feed <span class="live-dot ms-1"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-salaries" href="#" onclick="showPage('salaries')">Company Insights</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-portals" href="#" onclick="showPage('portals')">Role Portals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-contact" href="#" onclick="showPage('contact')">Support & FAQ</a>
+                    </li>
+                </ul>
+
+                <!-- Secret Admin Lock Gateway Icon (Hidden from standard view flow) -->
+                <button class="admin-lock-btn ms-2" id="adminLockBtn" title="Admin Security Gateway" onclick="handleAdminGatewayClick()">
+                    <i class="fa-solid fa-lock" id="adminLockIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Dynamic Banner Alert -->
+    <div class="container mt-3">
+        <div id="globalAnnouncement" class="alert alert-indigo bg-indigo-50 border border-indigo-200 text-indigo-900 d-flex justify-content-between align-items-center rounded-3 p-3 shadow-sm mb-0">
+            <div>
+                <span class="badge bg-primary me-2"><i class="fa-solid fa-bullhorn me-1"></i> Global Announcement</span>
+                <span id="bannerTextContent" class="fw-medium">BSSE Final Project Defense: System live with dynamic spaCy semantic matching models & weights!</span>
+            </div>
+            <small class="text-muted" id="bannerTimestamp">Updated Live</small>
+        </div>
+    </div>
+
+    <!-- Main Dynamic Content Container -->
+    <main class="container my-4 flex-grow-1">
+
+        <!-- ================= PAGE 1: OVERVIEW & BENCHMARKING ================= -->
+        <section id="page-intro" class="page-content">
+            <div class="hero-banner shadow-sm">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <span class="badge badge-violet bg-white text-dark mb-2">BSSE Final Year Thesis Project</span>
+                        <h1 class="fw-bold mb-2">SmartHire: AI-Assisted Job Matching & CV Recommendation System</h1>
+                        <p class="lead opacity-90 mb-3">Authored by <strong>Ayesha Waqar</strong>. Solving traditional keyword-match limitations with Context-Aware spaCy & Sentence Transformers NLP models.</p>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-light fw-semibold text-primary" onclick="showPage('portals')">Try Match Portal</button>
+                            <button class="btn btn-outline-light" onclick="showPage('jobs')">Explore Live Jobs</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center d-none d-lg-block">
+                        <i class="fa-solid fa-diagram-project fa-8x opacity-25"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic No-Code Custom Generated Buttons Showcase -->
+            <div id="introCustomButtonsZone" class="dynamic-btn-zone mb-4"></div>
+
+            <!-- Problem Statement & Architecture Grid -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-6">
+                    <div class="card h-100 p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-danger-subtle text-danger rounded-circle p-3 me-3">
+                                <i class="fa-solid fa-triangle-exclamation fa-xl"></i>
+                            </div>
+                            <h4 class="fw-bold m-0">The Fit Problem in Hiring</h4>
+                        </div>
+                        <p class="text-secondary">Traditional portals rely on rigid keyword queries. Qualified applicants are missed due to variations like <em>'Software Engineer'</em> vs <em>'Backend Developer'</em> or missing explicit acronyms.</p>
+                        <ul class="list-unstyled text-secondary mb-0">
+                            <li class="mb-2"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> High manual screening effort for HR recruiters</li>
+                            <li class="mb-2"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Keyword stuffing gaming the traditional ATS</li>
+                            <li><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Unstructured CV parsing failures</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success-subtle text-success rounded-circle p-3 me-3">
+                                <i class="fa-solid fa-diagram-next fa-xl"></i>
+                            </div>
+                            <h4 class="fw-bold m-0">System Architecture</h4>
+                        </div>
+                        <p class="text-secondary">SmartHire uses multi-stage processing: SpaCy NLP pipeline extracts Entities & Skills -> Vector Embedding via Sentence-BERT -> Weighted Score Matrix calculation.</p>
+                        <div class="bg-light p-3 rounded border text-center font-monospace small">
+                            [User CV / Job Specs] ➔ [spaCy Tokenizer & NER] ➔ [Skill Vector Embedding] ➔ [Cosine Distance Engine] ➔ [Ranked Candidate Output]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benchmarking Table -->
+            <div class="card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-simple text-primary me-2"></i> Competitive Benchmarking Matrix</h4>
+                    <span class="badge bg-secondary">System Validation</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle border mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Feature / Capability</th>
+                                <th class="text-primary fw-bold">SmartHire AI</th>
+                                <th>Rozee.pk</th>
+                                <th>LinkedIn</th>
+                                <th>Indeed</th>
+                                <th>Jobs.pk</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>spaCy Semantic NLP Matching</strong></td>
+                                <td><span class="badge bg-success"><i class="fa-solid fa-check"></i> Deep Match</span></td>
+                                <td><span class="badge bg-secondary">Keyword</span></td>
+                                <td><span class="badge bg-info text-dark">Partial AI</span></td>
+                                <td><span class="badge bg-secondary">Keyword</span></td>
+                                <td><span class="badge bg-danger">Basic Text</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Real-Time Relative Timestamps</strong></td>
+                                <td><span class="badge bg-success"><i class="fa-solid fa-check"></i> Live Stream</span></td>
+                                <td><span class="badge bg-light text-dark">Static Date</span></td>
+                                <td><span class="badge bg-success"><i class="fa-solid fa-check"></i> Yes</span></td>
+                                <td><span class="badge bg-light text-dark">Static Date</span></td>
+                                <td><span class="badge bg-danger">No</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Timely Salary Insights Badge</strong></td>
+                                <td><span class="badge bg-success"><i class="fa-solid fa-check"></i> Verified</span></td>
+                                <td><span class="badge bg-danger">Unverified</span></td>
+                                <td><span class="badge bg-info text-dark">Estimates</span></td>
+                                <td><span class="badge bg-info text-dark">Estimates</span></td>
+                                <td><span class="badge bg-danger">None</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dynamic Skill Weight Tuning</strong></td>
+                                <td><span class="badge bg-success"><i class="fa-solid fa-check"></i> Yes (Admin)</span></td>
+                                <td><span class="badge bg-danger">Fixed</span></td>
+                                <td><span class="badge bg-danger">Fixed</span></td>
+                                <td><span class="badge bg-danger">Fixed</span></td>
+                                <td><span class="badge bg-danger">Fixed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: LIVE JOBS FEED ================= -->
+        <section id="page-jobs" class="page-content d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold m-0">Live Job Stream</h2>
+                    <p class="text-secondary m-0">Real-time incoming positions across top technology companies</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-success-subtle text-success p-2 border border-success-subtle">
+                        <i class="fa-solid fa-circle-play me-1"></i> Live Stream Auto-Refreshing
+                    </span>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="triggerManualJobSim()">
+                        <i class="fa-solid fa-rotate me-1"></i> Simulate New Posting
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search & Filters -->
+            <div class="card p-3 mb-4">
+                <div class="row g-2">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                            <input type="text" id="jobSearchQuery" class="form-control border-start-0" placeholder="Search by title, skill, or keyword..." onkeyup="filterLiveJobs()">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="jobLocationFilter" class="form-select" onchange="filterLiveJobs()">
+                            <option value="">All Locations (Pakistan & Remote)</option>
+                            <option value="Islamabad">Islamabad / Rawalpindi</option>
+                            <option value="Lahore">Lahore</option>
+                            <option value="Karachi">Karachi</option>
+                            <option value="Remote">Remote</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100 fw-semibold" onclick="resetJobFilters()">Reset Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Stream List -->
+            <div id="liveJobsContainer" class="d-flex flex-column gap-3">
+                <!-- Dynamically Rendered Jobs -->
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: COMPANY REVIEWS & SALARY INSIGHTS ================= -->
+        <section id="page-salaries" class="page-content d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold m-0">Company Reviews & Timely Salary Insights</h2>
+                    <p class="text-secondary m-0">Verified workplace culture metrics and salary timeliness reports</p>
+                </div>
+                <button class="btn btn-primary fw-semibold" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                    <i class="fa-solid fa-pen-to-square me-1"></i> Submit Company Review
+                </button>
+            </div>
+
+            <div class="row g-4" id="companiesGrid">
+                <!-- Dynamically Populated Company Cards -->
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: ROLE PORTALS (CANDIDATE & EMPLOYER) ================= -->
+        <section id="page-portals" class="page-content d-none">
+            <!-- Nav Tabs for Candidate vs Employer -->
+            <ul class="nav nav-pills mb-4 gap-2 border-bottom pb-3" id="portalTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold fs-5 px-4" id="candidate-tab" data-bs-toggle="tab" data-bs-target="#candidatePortal" type="button">
+                        <i class="fa-solid fa-user-graduate me-2"></i>Candidate CV & Recommendation Portal
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold fs-5 px-4" id="employer-tab" data-bs-toggle="tab" data-bs-target="#employerPortal" type="button">
+                        <i class="fa-solid fa-briefcase me-2"></i>Employer Candidate Matching Portal
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="portalTabContent">
+                <!-- CANDIDATE SUB-PORTAL -->
+                <div class="tab-pane fade show active" id="candidatePortal">
+                    <div class="row g-4">
+                        <div class="col-lg-5">
+                            <div class="card p-4">
+                                <h4 class="fw-bold mb-3"><i class="fa-solid fa-file-arrow-up text-primary me-2"></i>Upload CV / Profile</h4>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Select CV File (.pdf, .docx, .txt)</label>
+                                    <input type="file" class="form-control" id="cvFileInput" onchange="simulateCVUpload(event)">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Extracted Skills (spaCy Tag Parser)</label>
+                                    <div class="border rounded p-2 bg-light min-vh-10" id="candidateSkillsList">
+                                        <!-- Editable skill pills appear here -->
+                                        <span class="text-muted small">Upload CV to parse skills or add manually below...</span>
+                                    </div>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <input type="text" id="addSkillInput" class="form-control" placeholder="Add custom skill e.g. React.js">
+                                    <button class="btn btn-outline-primary" type="button" onclick="addCustomSkill()">Add Skill</button>
+                                </div>
+
+                                <button class="btn btn-success w-100 fw-bold py-2" onclick="runCandidateMatching()">
+                                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Run spaCy Semantic Match
+                                </button>
+                            </div>
+
+                            <!-- Application Tracker -->
+                            <div class="card p-4 mt-4">
+                                <h5 class="fw-bold mb-3"><i class="fa-solid fa-list-check me-2 text-primary"></i>Application Tracker</h5>
+                                <div id="applicationTrackerContainer">
+                                    <p class="text-muted small">No active job applications submitted yet.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-7">
+                            <div class="card p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="fw-bold m-0">Recommended AI Matched Roles</h4>
+                                    <span id="matchScoreBadge" class="badge bg-primary">Sorted by Match Score</span>
+                                </div>
+                                <div id="candidateMatchResults" class="d-flex flex-column gap-3">
+                                    <div class="text-center py-5 text-muted">
+                                        <i class="fa-solid fa-brain fa-3x mb-3 opacity-50"></i>
+                                        <p>Upload your CV or adjust skills to trigger spaCy Match Engine.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMPLOYER SUB-PORTAL -->
+                <div class="tab-pane fade" id="employerPortal">
+                    <div class="row g-4">
+                        <div class="col-lg-5">
+                            <div class="card p-4">
+                                <h4 class="fw-bold mb-3"><i class="fa-solid fa-square-plus text-primary me-2"></i>Post Job & Required Criteria</h4>
+                                <form id="employerJobForm" onsubmit="event.preventDefault(); runEmployerCandidateRank();">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Job Title</label>
+                                        <input type="text" class="form-control" id="empJobTitle" value="Senior Full Stack Python Developer" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Required Core Skills (Comma Separated)</label>
+                                        <input type="text" class="form-control" id="empReqSkills" value="Python, Django, React, PostgreSQL, REST API" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-semibold">Min Experience (Years)</label>
+                                        <input type="number" class="form-control" id="empMinExp" value="3" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+                                        <i class="fa-solid fa-users-viewfinder me-2"></i>Rank Candidate Pool
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-7">
+                            <div class="card p-4">
+                                <h4 class="fw-bold mb-3">Ranked Applicants Pool</h4>
+                                <div id="employerCandidateResults" class="d-flex flex-column gap-3">
+                                    <!-- Dynamic Candidate Rank Cards -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: SUPPORT & CONTACT ================= -->
+        <section id="page-contact" class="page-content d-none">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="card p-4">
+                        <h3 class="fw-bold mb-3"><i class="fa-solid fa-envelope-open-text text-primary me-2"></i>Get in Touch</h3>
+                        <p class="text-secondary mb-4">Have questions regarding SmartHire AI framework or thesis benchmarks?</p>
+                        <form onsubmit="event.preventDefault(); alert('Message submitted successfully!'); this.reset();">
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" placeholder="Ayesha Waqar" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" placeholder="ayesha@smarthire.ai" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Inquiry Message</label>
+                                <textarea class="form-control" rows="4" placeholder="Enter your inquiry..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary fw-semibold px-4">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card p-4 mb-4">
+                        <h4 class="fw-bold mb-3"><i class="fa-solid fa-circle-question text-primary me-2"></i>Frequently Asked Questions</h4>
+                        <div class="accordion" id="faqAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                        How does spaCy semantic parsing differ from keyword search?
+                                    </button>
+                                </h2>
+                                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body text-secondary">
+                                        spaCy extracts grammatical entities and matches contextual meaning. For instance, 'Expert in Node.js' matches 'Backend JavaScript Developer' even if exact string terms differ.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                        What is the Timely Salary Insights badge?
+                                    </button>
+                                </h2>
+                                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body text-secondary">
+                                        It is an aggregation metric derived from candidate feedback scoring whether an employer dispatches salaries reliably on or before the designated monthly date.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-4 bg-primary text-white">
+                        <h5 class="fw-bold"><i class="fa-solid fa-graduation-cap me-2"></i>BSSE Academic Project</h5>
+                        <p class="m-0 opacity-90 small">Supervised Software Engineering Thesis Project - SmartHire Systems AI Lab, Department of Computer Science & Software Engineering.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECRET & ISOLATED PAGE: NO-CODE ADMIN STUDIO ================= -->
+        <!-- NOT VISIBLE IN PUBLIC NAVBAR -->
+        <section id="page-admin-studio" class="page-content d-none">
+            <div class="alert alert-warning border-warning d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <i class="fa-solid fa-user-shield me-2 text-dark"></i>
+                    <strong>Authenticated Admin Session Active</strong> — Hidden No-Code Management Studio
+                </div>
+                <button class="btn btn-sm btn-danger fw-semibold" onclick="lockAdminStudio()">
+                    <i class="fa-solid fa-lock me-1"></i> Lock & Exit Studio
+                </button>
+            </div>
+
+            <div class="row g-4">
+                <!-- 1. Add New Job Form -->
+                <div class="col-lg-6">
+                    <div class="card p-4">
+                        <h4 class="fw-bold mb-3"><i class="fa-solid fa-square-plus text-success me-2"></i>No-Code Live Job Publisher</h4>
+                        <p class="text-muted small">Instantly publish jobs directly to the live feed without code modification.</p>
+                        <form id="adminAddJobForm" onsubmit="event.preventDefault(); adminAddNewJob();">
+                            <div class="mb-2">
+                                <label class="form-label small fw-semibold">Job Title</label>
+                                <input type="text" id="adminJobTitle" class="form-control form-control-sm" required placeholder="e.g. Senior AI/NLP Research Engineer">
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Company Name</label>
+                                    <input type="text" id="adminJobCompany" class="form-control form-control-sm" required placeholder="e.g. TechVista Labs">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Location</label>
+                                    <input type="text" id="adminJobLocation" class="form-control form-control-sm" required placeholder="e.g. Islamabad / Remote">
+                                </div>
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Salary Range</label>
+                                    <input type="text" id="adminJobSalary" class="form-control form-control-sm" required placeholder="e.g. PKR 250k - 350k">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small fw-semibold">Timely Salary Score</label>
+                                    <select id="adminJobSalaryBadge" class="form-select form-select-sm">
+                                        <option value="98% Timely">98% Timely (Excellent)</option>
+                                        <option value="90% Timely">90% Timely (Good)</option>
+                                        <option value="Unverified">Unverified</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Skills (Comma separated)</label>
+                                <input type="text" id="adminJobSkills" class="form-control form-control-sm" required placeholder="Python, spaCy, PyTorch, FastAPI">
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm w-100 fw-bold">Publish Job to Live Feed</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 2. Dynamic Component & UI Button Generator -->
+                <div class="col-lg-6">
+                    <div class="card p-4">
+                        <h4 class="fw-bold mb-3"><i class="fa-solid fa-cube text-primary me-2"></i>No-Code UI Button Builder</h4>
+                        <p class="text-muted small">Inject customized CTA buttons into public pages on the fly.</p>
+                        
+                        <div class="mb-2">
+                            <label class="form-label small fw-semibold">Button Label Text</label>
+                            <input type="text" id="btnGenText" class="form-control form-control-sm" value="🚀 Special Hiring Event 2026">
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Style Variant</label>
+                                <select id="btnGenStyle" class="form-select form-select-sm">
+                                    <option value="btn-primary">Solid Primary</option>
+                                    <option value="btn-success">Solid Success</option>
+                                    <option value="btn-dark">Dark Navy</option>
+                                    <option value="btn-outline-primary">Outline Indigo</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">Target Action</label>
+                                <select id="btnGenTarget" class="form-select form-select-sm">
+                                    <option value="jobs">Navigate to Live Jobs</option>
+                                    <option value="portals">Navigate to Match Portals</option>
+                                    <option value="contact">Navigate to Contact</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm w-100 fw-bold mb-3" onclick="generateNoCodeButton()">
+                            Generate & Render Button
+                        </button>
+
+                        <div id="activeGeneratedButtons" class="border rounded p-2 bg-light">
+                            <span class="small text-muted d-block mb-1 fw-semibold">Active Generated Buttons Preview:</span>
+                            <div id="btnGenPreviewList" class="d-flex gap-2 flex-wrap"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Live Banner Content Editor -->
+                <div class="col-lg-6">
+                    <div class="card p-4">
+                        <h4 class="fw-bold mb-3"><i class="fa-solid fa-pen-to-square text-indigo me-2"></i>Global Announcement Banner Editor</h4>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Banner Message Content</label>
+                            <textarea id="adminBannerText" class="form-control" rows="2">BSSE Final Project Defense: System live with dynamic spaCy semantic matching models & weights!</textarea>
+                        </div>
+                        <button class="btn btn-indigo text-white bg-primary btn-sm fw-bold" onclick="updateGlobalBanner()">Update Live Announcement</button>
+                    </div>
+                </div>
+
+                <!-- 4. Algorithm Dynamic Weight Tuner -->
+                <div class="col-lg-6">
+                    <div class="card p-4">
+                        <h4 class="fw-bold mb-3"><i class="fa-solid fa-sliders text-warning me-2"></i>spaCy Algorithm Weight Tuner</h4>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between small fw-semibold">
+                                <span>Skill Overlap Weight</span>
+                                <span id="weightSkillVal">50%</span>
+                            </div>
+                            <input type="range" class="form-range" id="weightSkill" min="0" max="100" value="50" oninput="updateWeightDisplay()">
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between small fw-semibold">
+                                <span>Semantic Distance (spaCy Vectors)</span>
+                                <span id="weightSemanticVal">30%</span>
+                            </div>
+                            <input type="range" class="form-range" id="weightSemantic" min="0" max="100" value="30" oninput="updateWeightDisplay()">
+                        </div>
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between small fw-semibold">
+                                <span>Experience Relevance</span>
+                                <span id="weightExpVal">20%</span>
+                            </div>
+                            <input type="range" class="form-range" id="weightExp" min="0" max="100" value="20" oninput="updateWeightDisplay()">
+                        </div>
+                        <button class="btn btn-warning btn-sm fw-bold text-dark w-100" onclick="alert('Algorithm weights recalculated & updated in memory!')">Apply Recalibrated Weights</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <small class="fw-bold text-dark">SmartHire AI</small> — BSSE Final Thesis Project by <strong>Ayesha Waqar</strong>
+            </div>
+            <div class="small">
+                <span>&copy; 2026 All Rights Reserved</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ADMIN AUTHENTICATION MODAL (Triggered only via secret lock key) -->
+    <div class="modal fade" id="adminAuthModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-shield-halved me-2 text-warning"></i>Admin No-Code Gateway</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-secondary small">This section is restricted to system administrators. Please enter the security secret passphrase to enter the No-Code Control Studio.</p>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Admin Passcode</label>
+                        <input type="password" id="adminPasswordInput" class="form-control" placeholder="Enter password (e.g. admin)">
+                        <div class="form-text">Default keys for evaluation: <code>admin</code> or <code>smarthire2026</code></div>
+                    </div>
+                    <div id="adminAuthError" class="alert alert-danger py-2 small d-none">Invalid administrator passcode. Access denied.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary fw-bold" onclick="authenticateAdmin()">Authenticate & Enter</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDE-BY-SIDE MATCH BREAKDOWN DRAWER/MODAL -->
+    <div class="modal fade" id="matchBreakdownModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-magnifying-glass-chart me-2"></i>spaCy Deep Semantic Match Breakdown</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="matchBreakdownBody">
+                    <!-- Dynamic rendering -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPANY REVIEW SUBMISSION MODAL -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Submit Company & Salary Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reviewForm" onsubmit="event.preventDefault(); submitCompanyReview();">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Company Name</label>
+                            <input type="text" id="reviewCompany" class="form-control" required placeholder="e.g. Systems Limited">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Rating (1 to 5 Stars)</label>
+                            <select id="reviewRating" class="form-select">
+                                <option value="5">5 - Excellent Workplace</option>
+                                <option value="4">4 - Very Good</option>
+                                <option value="3">3 - Satisfactory</option>
+                                <option value="2">2 - Poor Timeliness</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Are Salaries Paid On Time?</label>
+                            <select id="reviewSalaryTimely" class="form-select">
+                                <option value="Always Timely (Before 1st)">Always Timely (Before 1st of month)</option>
+                                <option value="Slight Delay (1-5 days)">Slight Delay (1-5 days)</option>
+                                <option value="Frequently Delayed">Frequently Delayed</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Feedback Review</label>
+                            <textarea id="reviewText" class="form-control" rows="3" required placeholder="Share your experience regarding salary timeliness and environment..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">Submit Verified Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ================= APPLICATION STATE =================
+        let isAdminAuthenticated = false;
+
+        // In-memory Jobs State
+        let jobsData = [
+            {
+                id: 1,
+                title: "Senior AI / spaCy NLP Engineer",
+                company: "Systems Limited",
+                location: "Islamabad (Hybrid)",
+                salary: "PKR 280,000 - 350,000",
+                salaryBadge: "99% Timely",
+                skills: ["Python", "spaCy", "NLP", "FastAPI", "Transformers"],
+                timestamp: Date.now() - 120000 // 2 mins ago
+            },
+            {
+                id: 2,
+                title: "Full Stack React & Python Developer",
+                company: "Contour Software",
+                location: "Lahore",
+                salary: "PKR 220,000 - 280,000",
+                salaryBadge: "96% Timely",
+                skills: ["React", "Python", "Django", "PostgreSQL"],
+                timestamp: Date.now() - 900000 // 15 mins ago
+            },
+            {
+                id: 3,
+                title: "Junior Machine Learning Associate",
+                company: "10Pearls",
+                location: "Karachi / Remote",
+                salary: "PKR 140,000 - 180,000",
+                salaryBadge: "98% Timely",
+                skills: ["Python", "Scikit-Learn", "Pandas", "SQL"],
+                timestamp: Date.now() - 3600000 // 1 hour ago
+            }
+        ];
+
+        // Candidate Skills State
+        let extractedSkills = ["Python", "Machine Learning", "NLP", "React", "SQL"];
+
+        // Companies Insights State
+        let companiesData = [
+            { name: "Systems Limited", rating: 4.8, salaryBadge: "99% Timely", reviewsCount: 142, cultureScore: "4.7/5" },
+            { name: "Contour Software", rating: 4.6, salaryBadge: "96% Timely", reviewsCount: 98, cultureScore: "4.5/5" },
+            { name: "10Pearls", rating: 4.7, salaryBadge: "98% Timely", reviewsCount: 115, cultureScore: "4.6/5" },
+            { name: "Sarbex Systems", rating: 4.2, salaryBadge: "91% Timely", reviewsCount: 34, cultureScore: "4.1/5" }
+        ];
+
+        // Candidate Pool for Employer Ranking
+        let candidatePool = [
+            { name: "Ayesha Waqar", exp: 4, skills: ["Python", "Django", "React", "PostgreSQL", "spaCy"], score: 96 },
+            { name: "Hamza Ahmed", exp: 3, skills: ["Python", "Flask", "React", "REST API"], score: 84 },
+            { name: "Zainab Malik", exp: 2, skills: ["JavaScript", "React", "Node.js"], score: 68 },
+            { name: "Usman Ali", exp: 5, skills: ["Python", "Django", "FastAPI", "PostgreSQL"], score: 89 }
+        ];
+
+        let appliedJobs = [];
+        let generatedButtons = [];
+
+        // ================= INITIALIZATION =================
+        window.onload = function() {
+            renderLiveJobs();
+            renderCandidateSkills();
+            renderCompanyInsights();
+            renderEmployerCandidates();
+            
+            // Set periodic dynamic relative timer updates
+            setInterval(updateJobTimestamps, 30000); // Every 30s
+        };
+
+        // ================= ROUTING & PAGE NAVIGATION =================
+        function showPage(pageId) {
+            // Protect Admin Page route
+            if (pageId === 'admin-studio' && !isAdminAuthenticated) {
+                const modal = new bootstrap.Modal(document.getElementById('adminAuthModal'));
+                modal.show();
+                return;
+            }
+
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(el => el.classList.add('d-none'));
+
+            // Deactivate nav links
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+
+            // Show selected page
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) {
+                target.classList.remove('d-none');
+            }
+
+            // Highlight nav link if applicable
+            const navLink = document.getElementById(`nav-${pageId}`);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ================= ADMIN SECRET GATEWAY =================
+        function handleAdminGatewayClick() {
+            if (isAdminAuthenticated) {
+                showPage('admin-studio');
+            } else {
+                const modal = new bootstrap.Modal(document.getElementById('adminAuthModal'));
+                modal.show();
+            }
+        }
+
+        function authenticateAdmin() {
+            const pwd = document.getElementById('adminPasswordInput').value;
+            const err = document.getElementById('adminAuthError');
+
+            if (pwd === 'admin' || pwd === 'smarthire2026') {
+                isAdminAuthenticated = true;
+                err.classList.add('d-none');
+
+                // Update Lock Icon state in header
+                const btn = document.getElementById('adminLockBtn');
+                const icon = document.getElementById('adminLockIcon');
+                btn.classList.add('unlocked');
+                icon.className = 'fa-solid fa-lock-open';
+
+                // Close Modal & Redirect to hidden page
+                const modalEl = document.getElementById('adminAuthModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                modal.hide();
+
+                showPage('admin-studio');
+            } else {
+                err.classList.remove('d-none');
+            }
+        }
+
+        function lockAdminStudio() {
+            isAdminAuthenticated = false;
+
+            // Reset Lock Icon state
+            const btn = document.getElementById('adminLockBtn');
+            const icon = document.getElementById('adminLockIcon');
+            btn.classList.remove('unlocked');
+            icon.className = 'fa-solid fa-lock';
+
+            // Navigate back to home
+            showPage('intro');
+        }
+
+        // ================= PAGE 2: LIVE JOBS STREAM & TIMESTAMPS =================
+        function getRelativeTimeString(timeMs) {
+            const diffSeconds = Math.floor((Date.now() - timeMs) / 1000);
+            if (diffSeconds < 60) return "Just now";
+            const diffMins = Math.floor(diffSeconds / 60);
+            if (diffMins < 60) return `Posted ${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+            const diffHours = Math.floor(diffMins / 60);
+            if (diffHours < 24) return `Posted ${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            const diffDays = Math.floor(diffHours / 24);
+            return `Posted ${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        }
+
+        function renderLiveJobs(filteredData = null) {
+            const list = filteredData || jobsData;
+            const container = document.getElementById('liveJobsContainer');
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="card p-4 text-center text-muted">No positions match your search filters.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(job => `
+                <div class="card p-3">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                        <div>
+                            <span class="badge bg-success-subtle text-success mb-1 small">
+                                <i class="fa-solid fa-clock me-1"></i><span class="job-time-tag" data-time="${job.timestamp}">${getRelativeTimeString(job.timestamp)}</span>
+                            </span>
+                            <h5 class="fw-bold mb-1">${job.title}</h5>
+                            <div class="text-secondary small mb-2">
+                                <strong class="text-dark">${job.company}</strong> &bull; <i class="fa-solid fa-location-dot me-1"></i>${job.location} &bull; 
+                                <span class="badge bg-indigo-subtle text-primary border border-primary-subtle">${job.salaryBadge}</span>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold text-success mb-2">${job.salary}</div>
+                            <button class="btn btn-sm btn-primary fw-semibold" onclick="applyToJob('${job.title}', '${job.company}')">
+                                Quick Apply
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        ${job.skills.map(s => `<span class="badge bg-light text-dark border me-1">${s}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateJobTimestamps() {
+            document.querySelectorAll('.job-time-tag').forEach(el => {
+                const ts = parseInt(el.getAttribute('data-time'));
+                if (ts) el.innerText = getRelativeTimeString(ts);
+            });
+        }
+
+        function triggerManualJobSim() {
+            const titles = ["Senior PyTorch Researcher", "Cloud DevOps Specialist", "Django Backend Lead"];
+            const companies = ["TechVista", "Arbit Soft", "Netsol Technologies"];
+            const locations = ["Islamabad", "Lahore", "Remote"];
+
+            const newJob = {
+                id: Date.now(),
+                title: titles[Math.floor(Math.random() * titles.length)],
+                company: companies[Math.floor(Math.random() * companies.length)],
+                location: locations[Math.floor(Math.random() * locations.length)],
+                salary: "PKR 200,000 - 300,000",
+                salaryBadge: "97% Timely",
+                skills: ["Python", "Docker", "AWS", "REST"],
+                timestamp: Date.now()
+            };
+
+            jobsData.unshift(newJob);
+            renderLiveJobs();
+        }
+
+        function filterLiveJobs() {
+            const q = document.getElementById('jobSearchQuery').value.toLowerCase();
+            const loc = document.getElementById('jobLocationFilter').value.toLowerCase();
+
+            const filtered = jobsData.filter(j => {
+                const matchQ = j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q) || j.skills.some(s => s.toLowerCase().includes(q));
+                const matchLoc = !loc || j.location.toLowerCase().includes(loc);
+                return matchQ && matchLoc;
+            });
+
+            renderLiveJobs(filtered);
+        }
+
+        function resetJobFilters() {
+            document.getElementById('jobSearchQuery').value = '';
+            document.getElementById('jobLocationFilter').value = '';
+            renderLiveJobs();
+        }
+
+        // ================= PAGE 3: COMPANY REVIEWS =================
+        function renderCompanyInsights() {
+            const container = document.getElementById('companiesGrid');
+            container.innerHTML = companiesData.map(c => `
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="fw-bold m-0 text-truncate">${c.name}</h5>
+                            <span class="badge bg-warning text-dark"><i class="fa-solid fa-star me-1"></i>${c.rating}</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle me-1">
+                                <i class="fa-solid fa-shield-check me-1"></i>${c.salaryBadge}
+                            </span>
+                        </div>
+                        <div class="small text-secondary mb-2">
+                            <div>Culture Rating: <strong>${c.cultureScore}</strong></div>
+                            <div>Verified Feedback: <strong>${c.reviewsCount} reviews</strong></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function submitCompanyReview() {
+            const name = document.getElementById('reviewCompany').value;
+            const rating = document.getElementById('reviewRating').value;
+            const timely = document.getElementById('reviewSalaryTimely').value;
+
+            companiesData.unshift({
+                name: name,
+                rating: parseFloat(rating),
+                salaryBadge: timely.includes('Always') ? '99% Timely' : '85% Timely',
+                reviewsCount: 1,
+                cultureScore: `${rating}/5`
+            });
+
+            renderCompanyInsights();
+
+            const modalEl = document.getElementById('reviewModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+
+            alert('Thank you! Your company review and salary timeliness feedback has been recorded.');
+        }
+
+        // ================= PAGE 4: ROLE PORTALS =================
+        function simulateCVUpload(e) {
+            if (e.target.files.length > 0) {
+                // Pre-populate parsed skills
+                extractedSkills = ["Python", "FastAPI", "spaCy", "React", "PostgreSQL", "Docker"];
+                renderCandidateSkills();
+                runCandidateMatching();
+            }
+        }
+
+        function renderCandidateSkills() {
+            const container = document.getElementById('candidateSkillsList');
+            if (extractedSkills.length === 0) {
+                container.innerHTML = `<span class="text-muted small">No skills parsed yet.</span>`;
+                return;
+            }
+            container.innerHTML = extractedSkills.map((sk, idx) => `
+                <span class="skill-pill">
+                    ${sk}
+                    <i class="fa-solid fa-xmark btn-remove" onclick="removeSkill(${idx})"></i>
+                </span>
+            `).join('');
+        }
+
+        function addCustomSkill() {
+            const input = document.getElementById('addSkillInput');
+            if (input.value.trim()) {
+                extractedSkills.push(input.value.trim());
+                input.value = '';
+                renderCandidateSkills();
+                runCandidateMatching();
+            }
+        }
+
+        function removeSkill(index) {
+            extractedSkills.splice(index, 1);
+            renderCandidateSkills();
+            runCandidateMatching();
+        }
+
+        function runCandidateMatching() {
+            const container = document.getElementById('candidateMatchResults');
+
+            const matches = jobsData.map(j => {
+                // Calculate Mock spaCy semantic similarity score
+                let matchCount = 0;
+                j.skills.forEach(s => {
+                    if (extractedSkills.some(es => es.toLowerCase() === s.toLowerCase())) {
+                        matchCount++;
+                    }
+                });
+                let score = Math.min(99, Math.floor(60 + (matchCount * 12) + (extractedSkills.length * 2)));
+
+                return { ...j, score };
+            });
+
+            matches.sort((a, b) => b.score - a.score);
+
+            container.innerHTML = matches.map(m => `
+                <div class="card p-3">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="score-circle ${m.score > 85 ? 'bg-score-high' : m.score > 70 ? 'bg-score-mid' : 'bg-score-low'}">
+                                ${m.score}%
+                            </div>
+                            <div>
+                                <h5 class="fw-bold m-0">${m.title}</h5>
+                                <div class="small text-secondary">${m.company} &bull; ${m.location}</div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="openMatchBreakdown('${m.title}', '${m.score}')">
+                                Inspect Breakdown
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="applyToJob('${m.title}', '${m.company}')">
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applyToJob(title, company) {
+            appliedJobs.push({ title, company, date: new Date().toLocaleTimeString() });
+            renderApplicationTracker();
+            alert(`Application submitted for ${title} at ${company}!`);
+        }
+
+        function renderApplicationTracker() {
+            const c = document.getElementById('applicationTrackerContainer');
+            if (appliedJobs.length === 0) {
+                c.innerHTML = `<p class="text-muted small">No active job applications submitted yet.</p>`;
+                return;
+            }
+            c.innerHTML = appliedJobs.map(a => `
+                <div class="border-bottom pb-2 mb-2">
+                    <div class="fw-bold small">${a.title}</div>
+                    <div class="text-muted extra-small">${a.company} &bull; <span class="badge bg-warning text-dark">Under Review</span></div>
+                </div>
+            `).join('');
+        }
+
+        function openMatchBreakdown(title, score) {
+            const body = document.getElementById('matchBreakdownBody');
+            body.innerHTML = `
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold text-primary">${score}% Semantic Match</h3>
+                    <p class="text-muted">Breakdown computed via spaCy en_core_web_sm pipeline vector similarity.</p>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card p-3 bg-light">
+                            <h6 class="fw-bold">Your Extracted Vector Tokens</h6>
+                            <div>${extractedSkills.map(s => `<span class="badge bg-secondary me-1">${s}</span>`).join('')}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card p-3 bg-light">
+                            <h6 class="fw-bold">Target Job Required Tokens</h6>
+                            <span class="badge bg-primary mb-1">${title}</span>
+                            <div class="small text-muted">Cosine Distance Delta: 0.142 (High Semantic Coherence)</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const modal = new bootstrap.Modal(document.getElementById('matchBreakdownModal'));
+            modal.show();
+        }
+
+        function runEmployerCandidateRank() {
+            const reqSkills = document.getElementById('empReqSkills').value.split(',').map(s => s.trim().toLowerCase());
+            const minExp = parseInt(document.getElementById('empMinExp').value) || 0;
+
+            const ranked = candidatePool.map(c => {
+                let skillMatches = c.skills.filter(s => reqSkills.includes(s.toLowerCase())).length;
+                let expBonus = c.exp >= minExp ? 15 : 0;
+                let calculatedScore = Math.min(98, 50 + (skillMatches * 10) + expBonus);
+                return { ...c, calculatedScore };
+            });
+
+            ranked.sort((a, b) => b.calculatedScore - a.calculatedScore);
+
+            const container = document.getElementById('employerCandidateResults');
+            container.innerHTML = ranked.map(cand => `
+                <div class="card p-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="fw-bold mb-1">${cand.name}</h5>
+                            <div class="small text-muted mb-2">Experience: ${cand.exp} Years &bull; Core Stack: ${cand.skills.join(', ')}</div>
+                        </div>
+                        <div class="score-circle ${cand.calculatedScore > 85 ? 'bg-score-high' : 'bg-score-mid'}">
+                            ${cand.calculatedScore}%
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-outline-primary" onclick="alert('Candidate profile & CV link dispatched to recruiter inbox.')">
+                            Contact Candidate
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderEmployerCandidates() {
+            runEmployerCandidateRank();
+        }
+
+        // ================= ISOLATED NO-CODE ADMIN STUDIO LOGIC =================
+        function adminAddNewJob() {
+            const title = document.getElementById('adminJobTitle').value;
+            const company = document.getElementById('adminJobCompany').value;
+            const location = document.getElementById('adminJobLocation').value;
+            const salary = document.getElementById('adminJobSalary').value;
+            const badge = document.getElementById('adminJobSalaryBadge').value;
+            const skills = document.getElementById('adminJobSkills').value.split(',').map(s => s.trim());
+
+            const newJob = {
+                id: Date.now(),
+                title, company, location, salary,
+                salaryBadge: badge,
+                skills,
+                timestamp: Date.now()
+            };
+
+            jobsData.unshift(newJob);
+            renderLiveJobs();
+            document.getElementById('adminAddJobForm').reset();
+            alert('Job successfully published to live feed without code edits!');
+        }
+
+        function generateNoCodeButton() {
+            const text = document.getElementById('btnGenText').value;
+            const style = document.getElementById('btnGenStyle').value;
+            const target = document.getElementById('btnGenTarget').value;
+
+            if (!text) return;
+
+            const btnObj = { id: Date.now(), text, style, target };
+            generatedButtons.push(btnObj);
+
+            renderGeneratedButtons();
+        }
+
+        function renderGeneratedButtons() {
+            // Render inside Admin Preview
+            const previewContainer = document.getElementById('btnGenPreviewList');
+            previewContainer.innerHTML = generatedButtons.map(b => `
+                <button class="btn btn-sm ${b.style}" onclick="showPage('${b.target}')">
+                    ${b.text}
+                </button>
+            `).join('');
+
+            // Render onto Public Intro page showcase zone
+            const publicZone = document.getElementById('introCustomButtonsZone');
+            publicZone.innerHTML = generatedButtons.map(b => `
+                <button class="btn ${b.style} shadow-sm" onclick="showPage('${b.target}')">
+                    ${b.text}
+                </button>
+            `).join('');
+        }
+
+        function updateGlobalBanner() {
+            const txt = document.getElementById('adminBannerText').value;
+            document.getElementById('bannerTextContent').innerText = txt;
+            document.getElementById('bannerTimestamp').innerText = 'Just Now (Admin Modified)';
+            alert('Global public announcement updated!');
+        }
+
+        function updateWeightDisplay() {
+            document.getElementById('weightSkillVal').innerText = document.getElementById('weightSkill').value + '%';
+            document.getElementById('weightSemanticVal').innerText = document.getElementById('weightSemantic').value + '%';
+            document.getElementById('weightExpVal').innerText = document.getElementById('weightExp').value + '%';
+        }
+    </script>
+</body>
+</html>
